@@ -1,7 +1,10 @@
 package com.scalar.ProductServiceScalar.controllers;
 
+import com.scalar.ProductServiceScalar.exceptions.ProductNotFoundException;
 import com.scalar.ProductServiceScalar.models.Product;
 import com.scalar.ProductServiceScalar.services.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,7 +21,21 @@ public class ProductController {
 
     //http://localhost:8080/products/1
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") Long id){
+    public Product getProductById(@PathVariable("id") Long id) throws ProductNotFoundException{
+        /*ResponseEntity<Product> responseEntity = null;
+        try{
+            Product product = productService.getProductById(id);
+            responseEntity = new ResponseEntity<>(
+                    product,
+                    HttpStatus.NOT_FOUND
+            );
+        }catch (ProductNotFoundException e) {
+            responseEntity = new ResponseEntity<>(
+                    null,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        return responseEntity;*/
         return productService.getProductById(id);
     }
 
@@ -41,5 +58,14 @@ public class ProductController {
     @PutMapping("/{id}")
     public Product replaceProduct(@PathVariable("id") Long id,@RequestBody Product product){
         return product;
+    }
+
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException e) {
+        return new ResponseEntity<>(
+                e.getMessage(),
+                HttpStatus.SERVICE_UNAVAILABLE
+        );
     }
 }
