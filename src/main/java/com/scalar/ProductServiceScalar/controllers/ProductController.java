@@ -16,7 +16,7 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
 
-    public ProductController(@Qualifier("fakeStoreProductService") ProductService productService){
+    public ProductController(@Qualifier("selfProductService") ProductService productService){
         this.productService = productService;
     }
 
@@ -48,7 +48,8 @@ public class ProductController {
 
     @PostMapping("/")
     public Product createProduct(@RequestBody Product product){
-        return product;
+
+        return productService.createProduct(product);
     }
 
     @PatchMapping("/{id}")
@@ -57,13 +58,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product replaceProduct(@PathVariable("id") Long id,@RequestBody Product product){
-        return product;
+    public Product replaceProduct(@PathVariable("id") Long id,@RequestBody Product product) throws ProductNotFoundException {
+
+        return productService.replaceProduct(id,product);
     }
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") Long id) {
-        //productService.deleteProduct(id);
+        productService.deleteProduct(id);
     }
 
 

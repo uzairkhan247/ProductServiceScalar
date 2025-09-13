@@ -17,4 +17,8 @@ public class Category extends BaseModel{
     public void setName(String name) {
         this.name = name;
     }
+
+    //    @OneToMany(mappedBy = "category", cascade = {CascadeType.REMOVE})
+// can only be present in OneToMany side.
+//    private List<Product> products;
 }
